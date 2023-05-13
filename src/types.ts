@@ -41,6 +41,7 @@ export enum MessageType {
   RegisterInboxResponse = 'registerInboxResponse',
   GetThreads = 'getThreads',
   InjectApp = 'injectApp',
+  InjectStyles = 'injectStyles',
 }
 
 export interface Message<Type extends MessageType, Payload = undefined> {
@@ -52,4 +53,5 @@ export type InterceptorMessage = Message<MessageType.InterceptedInboxResponse, I
 export type ContentScriptMessage =
   | Message<MessageType.RegisterInboxResponse, InboxResponse>
   | Message<MessageType.GetThreads>
-  | Message<MessageType.InjectApp>;
+  | Message<MessageType.InjectApp>
+  | Message<MessageType.InjectStyles, HTMLStyleElement['outerHTML'][]>;

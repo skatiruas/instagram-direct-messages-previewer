@@ -4,9 +4,9 @@ import { ContentScriptMessage, Item, MessageType, Thread } from './types';
 
 function ItemComponent({ item_id, timestamp, text, action_log, reel_share }: Item) {
   return (
-    <li key={`${item_id}-${timestamp}`} className="instagramInboxPreviewerItem">
+    <div key={`${item_id}-${timestamp}`} className="instagramInboxPreviewerItem">
       {text || action_log?.description || reel_share?.text}
-    </li>
+    </div>
   );
 }
 
@@ -17,12 +17,12 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
     .sort((a, b) => a.timestamp - b.timestamp);
 
   return (
-    <ul key={thread_id} className="instagramInboxPreviewerThread">
+    <div key={thread_id} className="instagramInboxPreviewerThread">
       <div className="instagramInboxPreviewerThread__title">{thread_title}</div>
       {filteredAndSortedItems.map((item) => (
         <ItemComponent {...item} />
       ))}
-    </ul>
+    </div>
   );
 }
 

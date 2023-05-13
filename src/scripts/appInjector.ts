@@ -13,6 +13,12 @@ function injectApp() {
   iframe.setAttribute('hidden', 'hidden');
   iframe.setAttribute('style', 'overflow: hidden; height: 100%; width: 100%;');
   iframe.addEventListener('load', function (this) {
+    const styleElements = document.querySelectorAll('style');
+    const injectStylesMessage: ContentScriptMessage = {
+      type: MessageType.InjectStyles,
+      payload: Array.from(styleElements).map(({ outerHTML }) => outerHTML),
+    };
+    this.contentWindow?.postMessage(injectStylesMessage, '*');
     this.removeAttribute('hidden');
   });
 

@@ -3,10 +3,17 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { ContentScriptMessage, MessageType } from './types';
 
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+window.addEventListener('message', ({ data }: MessageEvent<ContentScriptMessage>) => {
+  if (data.type === MessageType.InjectStyles) {
+    data.payload.forEach((styleElementOuterHTML) => {
+      document.head.innerHTML += styleElementOuterHTML;
+    });
+  }
+});
+
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   <React.StrictMode>
     <App />

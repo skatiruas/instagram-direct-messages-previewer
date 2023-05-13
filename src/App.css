@@ -1,5 +1,5 @@
 .instagramInboxPreviewer {
-  background-color: #282c34;
+  background-color: rgb(var(--ig-primary-background));
   height: 100vh;
   display: flex;
   flex-direction: column;
@@ -8,6 +8,8 @@
   font-size: calc(10px + 2vmin);
   color: white;
   overflow: hidden;
+  word-wrap: break-word;
+  white-space: normal;
 }
 
 .instagramInboxPreviewer__logo {
@@ -15,7 +17,8 @@
   height: 50px;
   padding: 10px;
   pointer-events: none;
-  background-color: white;
+  background-color: rgb(var(--ig-primary-text));
+  opacity: 0.9;
   mask: url(logo.svg) no-repeat center;
   mask-size: 50px;
 }
@@ -30,12 +33,23 @@
   text-align: left;
   width: 100%;
   padding: 0;
+  color: rgb(var(--ig-primary-text));
+  font-size: var(--system-14-font-size);
+  line-height: var(--system-14-line-height);
 }
 
 .instagramInboxPreviewerThread__title {
-  font-weight: bold;
+  font-weight: var(--font-weight-system-semibold);
+  margin-bottom: 4px;
 }
 
 .instagramInboxPreviewerItem {
-  font-weight: normal;
+  font-weight: var(--font-weight-system-regular);
+  border: 1px solid rgb(var(--ig-highlight-background));
+  border-radius: 22px;
+  box-sizing: border-box;
+  min-height: 44px;
+  overflow: hidden;
+  padding: 16px;
+  margin-bottom: 8px;
 }
