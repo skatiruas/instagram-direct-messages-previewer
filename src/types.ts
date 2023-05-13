@@ -40,6 +40,7 @@ export enum MessageType {
   InterceptedInboxResponse = 'interceptedInboxResponse',
   RegisterInboxResponse = 'registerInboxResponse',
   GetThreads = 'getThreads',
+  InjectApp = 'injectApp',
 }
 
 export interface Message<Type extends MessageType, Payload = undefined> {
@@ -48,6 +49,7 @@ export interface Message<Type extends MessageType, Payload = undefined> {
 }
 
 export type InterceptorMessage = Message<MessageType.InterceptedInboxResponse, InboxResponse>;
-export type ContentMessage =
+export type ContentScriptMessage =
   | Message<MessageType.RegisterInboxResponse, InboxResponse>
-  | Message<MessageType.GetThreads>;
+  | Message<MessageType.GetThreads>
+  | Message<MessageType.InjectApp>;

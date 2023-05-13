@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { ContentMessage, Item, MessageType, Thread } from './types';
+import { ContentScriptMessage, Item, MessageType, Thread } from './types';
 
 function ItemComponent({ item_id, timestamp, text, action_log, reel_share }: Item) {
   return (
@@ -29,7 +29,7 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
 function App() {
   const [threads, setThreads] = useState<Thread[]>([]);
   const getThreads = useCallback(() => {
-    chrome.runtime.sendMessage<ContentMessage, Thread[]>(
+    chrome.runtime.sendMessage<ContentScriptMessage, Thread[]>(
       { type: MessageType.GetThreads, payload: undefined },
       (threads) => setThreads(threads.filter(({ read_state }) => read_state))
     );
@@ -37,7 +37,7 @@ function App() {
 
   useEffect(() => {
     getThreads();
-    chrome.runtime.onMessage.addListener(({ type }: ContentMessage, _sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage, _sender, sendResponse) => {
       sendResponse(type === MessageType.RegisterInboxResponse && getThreads());
     });
   }, [getThreads]);

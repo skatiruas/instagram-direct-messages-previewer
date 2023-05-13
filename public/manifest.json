@@ -8,7 +8,7 @@
     "48": "logo48.png",
     "128": "logo128.png"
   },
-  "permissions": ["scripting"],
+  "permissions": ["scripting", "tabs"],
   "background": {
     "service_worker": "scripts/serviceWorker.js"
   },
@@ -23,9 +23,17 @@
       "js": ["scripts/responseSender.js"],
       "matches": ["*://www.instagram.com/*"],
       "run_at": "document_start"
+    },
+    {
+      "js": ["scripts/appInjector.js"],
+      "matches": ["*://www.instagram.com/*"],
+      "run_at": "document_idle"
     }
   ],
-  "action": {
-    "default_popup": "index.html"
-  }
+  "web_accessible_resources": [
+    {
+      "resources": ["index.html"],
+      "matches": ["*://www.instagram.com/*"]
+    }
+  ]
 }
