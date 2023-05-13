@@ -25,3 +25,17 @@
   padding: 10px 20px;
   height: 100%;
 }
+
+.instagramInboxPreviewerThread {
+  text-align: left;
+  width: 100%;
+  padding: 0;
+}
+
+.instagramInboxPreviewerThread__title {
+  font-weight: bold;
+}
+
+.instagramInboxPreviewerItem {
+  font-weight: normal;
+}
