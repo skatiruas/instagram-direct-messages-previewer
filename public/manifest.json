@@ -12,6 +12,19 @@
   "background": {
     "service_worker": "scripts/serviceWorker.js"
   },
+  "content_scripts": [
+    {
+      "world": "MAIN",
+      "js": ["scripts/responseInterceptor.js"],
+      "matches": ["*://www.instagram.com/*"],
+      "run_at": "document_start"
+    },
+    {
+      "js": ["scripts/responseSender.js"],
+      "matches": ["*://www.instagram.com/*"],
+      "run_at": "document_start"
+    }
+  ],
   "action": {
     "default_popup": "index.html"
   }
