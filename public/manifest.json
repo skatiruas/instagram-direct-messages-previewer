@@ -8,9 +8,10 @@
     "48": "logo48.png",
     "128": "logo128.png"
   },
-  "permissions": [
-    "scripting"
-  ],
+  "permissions": ["scripting"],
+  "background": {
+    "service_worker": "scripts/serviceWorker.js"
+  },
   "action": {
     "default_popup": "index.html"
   }
