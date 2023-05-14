@@ -1,9 +1,11 @@
 import { ContentScriptMessage, MessageType } from '../types';
 
 const INJECTED_IFRAME_ID = 'instagramInboxPreviewerIframe';
-const INJECTION_DELAY = 100;
-function injectApp() {
-  document.getElementById(INJECTED_IFRAME_ID)?.remove();
+function injectApp(injectionRetryTimeout: number) {
+  // If already injected, leave it at the page
+  if (document.getElementById(INJECTED_IFRAME_ID)) {
+    return;
+  }
 
   const iframe = document.createElement('iframe');
   iframe.setAttribute('id', INJECTED_IFRAME_ID);
@@ -22,10 +24,14 @@ function injectApp() {
     this.removeAttribute('hidden');
   });
 
-  const messageBoard = document.querySelectorAll('[style="height: 100%; width: 100%;"]')[2];
-  messageBoard.appendChild(iframe);
+  try {
+    const messageBoard = document.querySelectorAll('[style="height: 100%; width: 100%;"]').item(2);
+    messageBoard.appendChild(iframe);
+  } catch {
+    injectionRetryTimeout && setTimeout(() => injectApp(0), injectionRetryTimeout);
+  }
 }
 
 chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage, _sender, sendResponse) => {
-  sendResponse(type === MessageType.InjectApp && setTimeout(injectApp, INJECTION_DELAY));
+  sendResponse(type === MessageType.InjectApp && injectApp(100));
 });

@@ -19,20 +19,13 @@ chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage, _
 
 // Logic for firing appInjector script
 const inboxViewRegExp = /^\/direct\/inbox|new\/$/;
-const loadingUrls: Record<number, string | undefined> = {};
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!tab.url) {
-    return;
-  } else if (changeInfo.status === 'loading') {
-    loadingUrls[tabId] = changeInfo.url || tab.url;
-  } else if (changeInfo.status === 'complete') {
-    const loadedUrl = loadingUrls[tabId];
-    if (inboxViewRegExp.test(new URL(tab.url).pathname) && (!loadedUrl || loadedUrl === tab.url)) {
+  if (changeInfo.status === 'complete' && tab.url) {
+    if (inboxViewRegExp.test(new URL(tab.url).pathname)) {
       chrome.tabs.sendMessage<ContentScriptMessage>(tabId, {
         type: MessageType.InjectApp,
         payload: undefined,
       });
     }
-    loadingUrls[tabId] = undefined;
   }
 });
