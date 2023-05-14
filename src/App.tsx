@@ -37,8 +37,15 @@ function App() {
 
   useEffect(() => {
     getThreads();
-    chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage, _sender, sendResponse) => {
-      sendResponse(type === MessageType.RegisterInboxResponse && getThreads());
+    chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
+      switch (type) {
+        case MessageType.RegisterInboxResponse:
+          getThreads();
+          break;
+        case MessageType.InjectStyles:
+          payload.forEach((styleElementOuterHTML) => (document.head.innerHTML += styleElementOuterHTML));
+          break;
+      }
     });
   }, [getThreads]);
 

@@ -16,11 +16,10 @@ function injectApp(injectionRetryTimeout: number) {
   iframe.setAttribute('style', 'overflow: hidden; height: 100%; width: 100%;');
   iframe.addEventListener('load', function (this) {
     const styleElements = document.querySelectorAll('style');
-    const injectStylesMessage: ContentScriptMessage = {
+    chrome.runtime.sendMessage<ContentScriptMessage>({
       type: MessageType.InjectStyles,
       payload: Array.from(styleElements).map(({ outerHTML }) => outerHTML),
-    };
-    this.contentWindow?.postMessage(injectStylesMessage, '*');
+    });
     this.removeAttribute('hidden');
   });
 
@@ -32,6 +31,6 @@ function injectApp(injectionRetryTimeout: number) {
   }
 }
 
-chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage, _sender, sendResponse) => {
-  sendResponse(type === MessageType.InjectApp && injectApp(100));
+chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage) => {
+  type === MessageType.InjectApp && injectApp(100);
 });

@@ -3,7 +3,6 @@ import { ContentScriptMessage, MessageType, Thread } from '../types';
 // Database/API for saving and getting the intercepted responses
 const threadMap: Record<string, Thread> = {};
 chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage, _sender, sendResponse) => {
-  let response;
   switch (type) {
     case MessageType.RegisterInboxResponse:
       payload.inbox.threads.forEach((thread) => {
@@ -11,10 +10,9 @@ chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage, _
       });
       break;
     case MessageType.GetThreads:
-      response = Object.values(threadMap);
+      sendResponse(Object.values(threadMap));
       break;
   }
-  sendResponse(response);
 });
 
 // Logic for firing appInjector script
