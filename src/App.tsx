@@ -53,24 +53,27 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
   );
 }
 
-function InstagramInboxPreviewer({ threads }: { threads: Thread[] }) {
+function InstagramInboxPreviewer({ threads }: { threads: Thread[] | undefined }) {
   const { t } = useTranslatorContext();
+
   return (
     <div className="instagramInboxPreviewer">
-      <div className="instagramInboxPreviewer__logo" />
-      <div className="instagramInboxPreviewer__content">
-        {threads.length ? threads.map((thread) => <ThreadComponent {...thread} />) : t('NO_MESSAGES')}
-      </div>
+      <div className={`instagramInboxPreviewer__logo ${!threads ? 'instagramInboxPreviewer__logo--loading' : ''}`} />
+      {threads && (
+        <div className="instagramInboxPreviewer__content">
+          {threads.length ? threads.map((thread) => <ThreadComponent {...thread} />) : t('NO_MESSAGES')}
+        </div>
+      )}
     </div>
   );
 }
 
 function App() {
-  const [threads, setThreads] = useState<Thread[]>([]);
+  const [threads, setThreads] = useState<Thread[]>();
   const getThreads = useCallback(() => {
-    chrome.runtime.sendMessage<ContentScriptMessage, Thread[]>(
+    chrome.runtime.sendMessage<ContentScriptMessage, Thread[] | undefined>(
       { type: MessageType.GetThreads, payload: undefined },
-      (threads) => setThreads(threads.filter(({ read_state }) => read_state))
+      (threads) => setThreads(threads?.filter(({ read_state }) => read_state))
     );
   }, []);
 
@@ -78,7 +81,6 @@ function App() {
     getThreads();
     chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
       switch (type) {
-        case MessageType.RegisterTranslatorData:
         case MessageType.RegisterInboxResponse:
           getThreads();
           break;

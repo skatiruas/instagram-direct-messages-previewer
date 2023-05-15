@@ -24,6 +24,19 @@
   mask-size: 50px;
 }
 
+.instagramInboxPreviewer__logo--loading {
+  animation: searchingRotation 0.5s linear infinite;
+}
+
+@keyframes searchingRotation {
+  from {
+    transform: rotate(0deg) translateX(2px) rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg) translateX(2px) rotate(-360deg);
+  }
+}
+
 .instagramInboxPreviewer__content {
   overflow-y: scroll;
   padding: 10px 20px;

@@ -2,17 +2,17 @@ import { TranslatorData } from '../translator/types';
 import { ContentScriptMessage, MessageType, Thread } from '../types';
 
 // Database/API for saving and getting the intercepted responses
-const threadMap: Record<string, Thread> = {};
+let threadMap: Record<string, Thread> | undefined = undefined;
 let translatorData: Partial<TranslatorData> = {};
 chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage, _sender, sendResponse) => {
   switch (type) {
     case MessageType.RegisterInboxResponse:
       payload.inbox.threads.forEach((thread) => {
-        threadMap[thread.thread_id] = thread;
+        threadMap = { ...threadMap, [thread.thread_id]: thread };
       });
       break;
     case MessageType.GetThreads:
-      sendResponse(Object.values(threadMap));
+      sendResponse(threadMap && Object.values(threadMap));
       break;
     case MessageType.RegisterTranslatorData:
       translatorData = { ...translatorData, ...payload };
