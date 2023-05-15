@@ -1,20 +1,38 @@
 import { TranslatorData } from './translator/types';
 
-export interface Item {
+interface BaseItem {
   item_id: string;
   timestamp: number;
-  text?: string;
   hide_in_thread?: boolean;
   user_id: string;
-  action_log?: {
+}
+
+export interface UnknownItem extends BaseItem {
+  item_type: string;
+}
+
+export interface TextItem extends BaseItem {
+  item_type: 'text';
+  text: string;
+}
+
+export interface ActionLogItem extends BaseItem {
+  item_type: 'action_log';
+  action_log: {
     description: string;
     is_reaction_log: boolean;
   };
-  reel_share?: {
+}
+
+export interface ReelShareItem extends BaseItem {
+  item_type: 'reel_share';
+  reel_share: {
     text: string;
+    type: 'reply' | 'reaction';
   };
 }
 
+export type Item = TextItem | ActionLogItem | ReelShareItem;
 export interface Thread {
   thread_id: string;
   thread_title: string;

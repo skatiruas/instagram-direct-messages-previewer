@@ -1,6 +1,7 @@
 .instagramInboxPreviewer {
   background-color: rgb(var(--ig-primary-background));
   height: 100vh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -27,15 +28,16 @@
   overflow-y: scroll;
   padding: 10px 20px;
   height: 100%;
+  font-size: var(--system-14-font-size);
+  font-weight: var(--font-weight-system-regular);
+  line-height: var(--system-14-line-height);
+  color: rgb(var(--ig-primary-text));
 }
 
 .instagramInboxPreviewerThread {
   text-align: left;
   width: 100%;
   padding: 0;
-  color: rgb(var(--ig-primary-text));
-  font-size: var(--system-14-font-size);
-  line-height: var(--system-14-line-height);
 }
 
 .instagramInboxPreviewerThread__title {
@@ -44,7 +46,6 @@
 }
 
 .instagramInboxPreviewerItem {
-  font-weight: var(--font-weight-system-regular);
   border: 1px solid rgb(var(--ig-highlight-background));
   border-radius: 22px;
   box-sizing: border-box;
@@ -52,4 +53,8 @@
   overflow: hidden;
   padding: 16px;
   margin-bottom: 8px;
+}
+
+.instagramInboxPreviewerItem--unknown {
+  color: rgb(var(--ig-error-or-destructive));
 }
