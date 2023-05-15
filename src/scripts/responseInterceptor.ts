@@ -1,3 +1,4 @@
+import { generateTranslatorData } from '../translator/helpers';
 import { InterceptorMessage, MessageType } from '../types';
 
 const inboxApiRegExp = /^\/api\/v1\/direct_v2\/inbox\/$/;
@@ -23,3 +24,16 @@ const inboxApiRegExp = /^\/api\/v1\/direct_v2\/inbox\/$/;
     return send.apply(this, [body]);
   };
 })(XMLHttpRequest);
+
+// Intercept translation strings on Instagram window
+document.addEventListener('DOMContentLoaded', () => {
+  const polarisDirectStrings = (window as any).importNamespace?.('PolarisDirectStrings');
+  polarisDirectStrings &&
+    window.postMessage(
+      {
+        type: MessageType.InterceptedTranslatorData,
+        payload: generateTranslatorData(polarisDirectStrings),
+      },
+      '*'
+    );
+});

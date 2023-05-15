@@ -1,3 +1,5 @@
+import { TranslatorData } from './translator/types';
+
 export interface Item {
   item_id: string;
   timestamp: number;
@@ -40,6 +42,9 @@ export enum MessageType {
   InterceptedInboxResponse = 'interceptedInboxResponse',
   RegisterInboxResponse = 'registerInboxResponse',
   GetThreads = 'getThreads',
+  InterceptedTranslatorData = 'interceptedTranslatorData',
+  RegisterTranslatorData = 'registerTranslatorData',
+  GetTranslatorData = 'getTranslatorData',
   InjectApp = 'injectApp',
   InjectStyles = 'injectStyles',
 }
@@ -49,9 +54,13 @@ export interface Message<Type extends MessageType, Payload = undefined> {
   payload: Payload;
 }
 
-export type InterceptorMessage = Message<MessageType.InterceptedInboxResponse, InboxResponse>;
+export type InterceptorMessage =
+  | Message<MessageType.InterceptedInboxResponse, InboxResponse>
+  | Message<MessageType.InterceptedTranslatorData, TranslatorData>;
 export type ContentScriptMessage =
   | Message<MessageType.RegisterInboxResponse, InboxResponse>
   | Message<MessageType.GetThreads>
+  | Message<MessageType.RegisterTranslatorData, TranslatorData>
+  | Message<MessageType.GetTranslatorData>
   | Message<MessageType.InjectApp>
   | Message<MessageType.InjectStyles, HTMLStyleElement['outerHTML'][]>;

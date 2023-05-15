@@ -9,5 +9,11 @@ window.addEventListener('message', ({ data }: MessageEvent<InterceptorMessage>) 
         payload: data.payload,
       });
       break;
+    case MessageType.InterceptedTranslatorData:
+      chrome.runtime.sendMessage<ContentScriptMessage>({
+        type: MessageType.RegisterTranslatorData,
+        payload: data.payload,
+      });
+      break;
   }
 });
