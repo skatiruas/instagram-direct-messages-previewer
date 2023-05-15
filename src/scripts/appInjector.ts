@@ -23,12 +23,21 @@ function injectApp(injectionRetryTimeout: number) {
     this.removeAttribute('hidden');
   });
 
-  try {
-    const messageBoard = document.querySelectorAll('[style="height: 100%; width: 100%;"]').item(2);
-    messageBoard.appendChild(iframe);
-  } catch {
-    injectionRetryTimeout && setTimeout(() => injectApp(0), injectionRetryTimeout);
-  }
+  requestAnimationFrame(() => {
+    try {
+      const fullExtensionElements = document.querySelectorAll('[style="height: 100%; width: 100%;"]');
+      const messageBoard = fullExtensionElements.item(fullExtensionElements.length - 1);
+      if (
+        injectionRetryTimeout &&
+        (messageBoard.firstElementChild?.tagName !== 'svg' || !messageBoard.lastElementChild?.querySelector('button'))
+      ) {
+        throw 'Injection place not found';
+      }
+      messageBoard.appendChild(iframe);
+    } catch {
+      injectionRetryTimeout && setTimeout(() => injectApp(injectionRetryTimeout - 10), injectionRetryTimeout);
+    }
+  });
 }
 
 chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage) => {
