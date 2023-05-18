@@ -1,9 +1,9 @@
 import { ContentScriptMessage, MessageType } from '../types';
 
+const INBOX_VIEW_REG_EXP = /^\/direct\/inbox|new\/$/;
 const INJECTED_IFRAME_ID = 'instagramInboxPreviewerIframe';
 function injectApp(injectionRetryTimeout: number) {
-  // If already injected, leave it at the page
-  if (document.getElementById(INJECTED_IFRAME_ID)) {
+  if (!INBOX_VIEW_REG_EXP.test(window.location.pathname) || document.getElementById(INJECTED_IFRAME_ID)) {
     return;
   }
 
@@ -40,6 +40,8 @@ function injectApp(injectionRetryTimeout: number) {
   });
 }
 
-chrome.runtime.onMessage.addListener(({ type }: ContentScriptMessage) => {
-  type === MessageType.InjectApp && injectApp(100);
+new MutationObserver(() => injectApp(100)).observe(document.body, {
+  attributes: false,
+  childList: true,
+  subtree: false,
 });

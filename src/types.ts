@@ -76,7 +76,6 @@ export enum MessageType {
   InterceptedTranslatorData = 'interceptedTranslatorData',
   RegisterTranslatorData = 'registerTranslatorData',
   GetTranslatorData = 'getTranslatorData',
-  InjectApp = 'injectApp',
   InjectStyles = 'injectStyles',
 }
 
@@ -95,5 +94,4 @@ export type ContentScriptMessage =
   | Message<MessageType.GetThreads>
   | Message<MessageType.RegisterTranslatorData, TranslatorData>
   | Message<MessageType.GetTranslatorData>
-  | Message<MessageType.InjectApp>
   | Message<MessageType.InjectStyles, HTMLStyleElement['outerHTML'][]>;

@@ -58,16 +58,3 @@ function patchThreadLastSeen({ path, op, value }: IgMessageSyncOp) {
     }
   }
 }
-
-// Logic for firing appInjector script
-const inboxViewRegExp = /^\/direct\/inbox|new\/$/;
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url) {
-    if (inboxViewRegExp.test(new URL(tab.url).pathname)) {
-      chrome.tabs.sendMessage<ContentScriptMessage>(tabId, {
-        type: MessageType.InjectApp,
-        payload: undefined,
-      });
-    }
-  }
-});
