@@ -43,6 +43,10 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
     .filter(({ timestamp }) => viewerLastSeen < timestamp)
     .sort((a, b) => a.timestamp - b.timestamp);
 
+  if (!filteredAndSortedItems.length) {
+    return null;
+  }
+
   return (
     <div key={thread_id} className="instagramInboxPreviewerThread">
       <div className="instagramInboxPreviewerThread__title">{thread_title}</div>
@@ -82,6 +86,8 @@ function App() {
     chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
       switch (type) {
         case MessageType.RegisterInboxResponse:
+        case MessageType.RegisterIgMessageSyncResponse:
+        case MessageType.RegisterTranslatorData:
           getThreads();
           break;
         case MessageType.InjectStyles:

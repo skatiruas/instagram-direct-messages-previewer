@@ -9,6 +9,12 @@ window.addEventListener('message', ({ data }: MessageEvent<InterceptorMessage>) 
         payload: data.payload,
       });
       break;
+    case MessageType.InterceptedIgMessageSyncResponse:
+      chrome.runtime.sendMessage<ContentScriptMessage>({
+        type: MessageType.RegisterIgMessageSyncResponse,
+        payload: data.payload,
+      });
+      break;
     case MessageType.InterceptedTranslatorData:
       chrome.runtime.sendMessage<ContentScriptMessage>({
         type: MessageType.RegisterTranslatorData,

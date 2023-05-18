@@ -1,7 +1,7 @@
 .instagramInboxPreviewer {
   background-color: rgb(var(--ig-primary-background));
   height: 100vh;
-  width: 100%;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,7 +49,7 @@
 
 .instagramInboxPreviewerThread {
   text-align: left;
-  width: 100%;
+  width: 100vw;
   padding: 0;
 }
 
@@ -59,6 +59,7 @@
 }
 
 .instagramInboxPreviewerItem {
+  width: 100vw;
   border: 1px solid rgb(var(--ig-highlight-background));
   border-radius: 22px;
   box-sizing: border-box;

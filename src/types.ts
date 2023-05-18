@@ -56,9 +56,22 @@ export interface InboxResponse {
   inbox: Inbox;
 }
 
+export interface IgMessageSyncOp {
+  op: 'add' | 'remove' | 'replace';
+  path: string;
+  value: string;
+}
+
+export interface IgMessageSyncResponse {
+  data: IgMessageSyncOp[];
+  event: 'patch';
+}
+
 export enum MessageType {
   InterceptedInboxResponse = 'interceptedInboxResponse',
   RegisterInboxResponse = 'registerInboxResponse',
+  InterceptedIgMessageSyncResponse = 'interceptedIgMessageSyncResponse',
+  RegisterIgMessageSyncResponse = 'registerIgMessageSyncResponse',
   GetThreads = 'getThreads',
   InterceptedTranslatorData = 'interceptedTranslatorData',
   RegisterTranslatorData = 'registerTranslatorData',
@@ -74,9 +87,11 @@ export interface Message<Type extends MessageType, Payload = undefined> {
 
 export type InterceptorMessage =
   | Message<MessageType.InterceptedInboxResponse, InboxResponse>
+  | Message<MessageType.InterceptedIgMessageSyncResponse, IgMessageSyncResponse>
   | Message<MessageType.InterceptedTranslatorData, TranslatorData>;
 export type ContentScriptMessage =
   | Message<MessageType.RegisterInboxResponse, InboxResponse>
+  | Message<MessageType.RegisterIgMessageSyncResponse, IgMessageSyncResponse>
   | Message<MessageType.GetThreads>
   | Message<MessageType.RegisterTranslatorData, TranslatorData>
   | Message<MessageType.GetTranslatorData>
