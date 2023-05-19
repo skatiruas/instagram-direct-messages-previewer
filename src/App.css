@@ -1,3 +1,22 @@
+:root {
+  --system-14-font-size: 14px;
+  --system-14-line-height: 18px;
+  --font-weight-system-regular: 400;
+  --font-weight-system-semibold: 600;
+  --ig-error-or-destructive: 237, 73, 86;
+  --ig-primary-background: 255, 255, 255;
+  --ig-primary-text: 0, 0, 0;
+  --ig-highlight-background: 239, 239, 239;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ig-primary-background: 0, 0, 0;
+    --ig-primary-text: 245, 245, 245;
+    --ig-highlight-background: 38, 38, 38;
+  }
+}
+
 .instagramDirectMessagesPreviewer {
   background-color: rgb(var(--ig-primary-background));
   height: 100vh;
