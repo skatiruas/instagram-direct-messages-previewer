@@ -1,6 +1,6 @@
 {
   "name": "Instagram Direct Messages Previewer",
-  "description": "Preview Instagram direct messages without opening them.",
+  "description": "Preview Instagram direct messages without opening them",
   "version": "0.1.0",
   "manifest_version": 3,
   "icons": {
@@ -8,7 +8,6 @@
     "48": "logo48.png",
     "128": "logo128.png"
   },
-  "permissions": ["scripting"],
   "background": {
     "service_worker": "scripts/serviceWorker.js"
   },

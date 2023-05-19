@@ -18,7 +18,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && npm run build:scripts",
+    "build": "GENERATE_SOURCEMAP=false react-scripts build && npm run build:scripts",
     "build:scripts": "webpack --config webpack-scripts.config.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

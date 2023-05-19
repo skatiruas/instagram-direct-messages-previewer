@@ -2,7 +2,7 @@ import { ContentScriptMessage, MessageType } from '../types';
 
 const INBOX_VIEW_REG_EXP = /^\/direct\/inbox|new\/$/;
 const INJECTED_IFRAME_ID = 'instagramDirectMessagesPreviewerIframe';
-function injectApp(injectionRetryTimeout: number) {
+function injectApp(injectionRetryTimeout = 100) {
   if (!INBOX_VIEW_REG_EXP.test(window.location.pathname) || document.getElementById(INJECTED_IFRAME_ID)) {
     return;
   }
@@ -20,7 +20,7 @@ function injectApp(injectionRetryTimeout: number) {
       type: MessageType.UpdatedStyles,
       payload: Array.from(styleElements).map(({ outerHTML }) => outerHTML),
     });
-    this.removeAttribute('hidden');
+    requestAnimationFrame(() => this.removeAttribute('hidden'));
   });
 
   requestAnimationFrame(() => {
@@ -40,7 +40,8 @@ function injectApp(injectionRetryTimeout: number) {
   });
 }
 
-new MutationObserver(() => injectApp(100)).observe(document.body, {
+injectApp();
+new MutationObserver(() => injectApp()).observe(document.body, {
   attributes: false,
   childList: true,
   subtree: false,
