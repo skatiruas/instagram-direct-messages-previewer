@@ -17,7 +17,7 @@ function injectApp(injectionRetryTimeout: number) {
   iframe.addEventListener('load', function (this) {
     const styleElements = document.querySelectorAll('style');
     chrome.runtime.sendMessage<ContentScriptMessage>({
-      type: MessageType.InjectStyles,
+      type: MessageType.UpdatedStyles,
       payload: Array.from(styleElements).map(({ outerHTML }) => outerHTML),
     });
     this.removeAttribute('hidden');

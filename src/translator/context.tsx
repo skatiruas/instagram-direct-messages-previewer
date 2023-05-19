@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { ContentScriptMessage, MessageType } from '../types';
+import { AppMessage, ContentScriptMessage, MessageType } from '../types';
 import { TranslatorData } from './types';
 import { getTranslationValue } from './helpers';
 
@@ -15,10 +15,10 @@ export const TranslatorProvider = ({ children }: { children: React.ReactNode }) 
   const [translatorData, setTranslatorData] = useState<TranslatorData>({} as TranslatorData);
 
   useEffect(() => {
-    chrome.runtime.sendMessage<ContentScriptMessage, TranslatorData>(
-      { type: MessageType.GetTranslatorData, payload: undefined },
-      (partialAppStrings) => setTranslatorData({ ...translatorData, ...partialAppStrings })
-    );
+    chrome.runtime.sendMessage<AppMessage>({ type: MessageType.GetTranslatorData });
+    chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
+      type === MessageType.UpdatedTranslatorData && setTranslatorData({ ...translatorData, ...payload });
+    });
   }, []);
 
   const t = useCallback<TranslatorFunction>(

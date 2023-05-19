@@ -69,29 +69,29 @@ export interface IgMessageSyncResponse {
 
 export enum MessageType {
   InterceptedInboxResponse = 'interceptedInboxResponse',
-  RegisterInboxResponse = 'registerInboxResponse',
   InterceptedIgMessageSyncResponse = 'interceptedIgMessageSyncResponse',
-  RegisterIgMessageSyncResponse = 'registerIgMessageSyncResponse',
-  GetThreads = 'getThreads',
   InterceptedTranslatorData = 'interceptedTranslatorData',
-  RegisterTranslatorData = 'registerTranslatorData',
+  UpdatedThreads = 'updatedThreads',
+  UpdatedTranslatorData = 'updatedTranslatorData',
+  UpdatedStyles = 'updatedStyles',
+  GetThreads = 'getThreads',
   GetTranslatorData = 'getTranslatorData',
-  InjectStyles = 'injectStyles',
 }
 
-export interface Message<Type extends MessageType, Payload = undefined> {
+export interface Message<Type extends MessageType> {
   type: Type;
+}
+
+export interface PayloadMessage<Type extends MessageType, Payload> extends Message<Type> {
   payload: Payload;
 }
 
 export type InterceptorMessage =
-  | Message<MessageType.InterceptedInboxResponse, InboxResponse>
-  | Message<MessageType.InterceptedIgMessageSyncResponse, IgMessageSyncResponse>
-  | Message<MessageType.InterceptedTranslatorData, TranslatorData>;
+  | PayloadMessage<MessageType.InterceptedInboxResponse, InboxResponse>
+  | PayloadMessage<MessageType.InterceptedIgMessageSyncResponse, IgMessageSyncResponse>
+  | PayloadMessage<MessageType.InterceptedTranslatorData, TranslatorData>;
 export type ContentScriptMessage =
-  | Message<MessageType.RegisterInboxResponse, InboxResponse>
-  | Message<MessageType.RegisterIgMessageSyncResponse, IgMessageSyncResponse>
-  | Message<MessageType.GetThreads>
-  | Message<MessageType.RegisterTranslatorData, TranslatorData>
-  | Message<MessageType.GetTranslatorData>
-  | Message<MessageType.InjectStyles, HTMLStyleElement['outerHTML'][]>;
+  | PayloadMessage<MessageType.UpdatedThreads, Thread[]>
+  | PayloadMessage<MessageType.UpdatedTranslatorData, TranslatorData>
+  | PayloadMessage<MessageType.UpdatedStyles, HTMLStyleElement['outerHTML'][]>;
+export type AppMessage = Message<MessageType.GetThreads> | Message<MessageType.GetTranslatorData>;

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { ContentScriptMessage, MessageType, Thread, Item, UnknownItem } from './types';
+import { AppMessage, ContentScriptMessage, MessageType, Thread, Item, UnknownItem } from './types';
 import { TranslatorFunction, TranslatorProvider, useTranslatorContext } from './translator/context';
 
 function renderNotImplementedContent(...args: string[]) {
@@ -74,28 +74,14 @@ function InstagramInboxPreviewer({ threads }: { threads: Thread[] | undefined })
 
 function App() {
   const [threads, setThreads] = useState<Thread[]>();
-  const getThreads = useCallback(() => {
-    chrome.runtime.sendMessage<ContentScriptMessage, Thread[] | undefined>(
-      { type: MessageType.GetThreads, payload: undefined },
-      (threads) => setThreads(threads?.filter(({ read_state }) => read_state))
-    );
-  }, []);
 
   useEffect(() => {
-    getThreads();
+    chrome.runtime.sendMessage<AppMessage>({ type: MessageType.GetThreads });
     chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
-      switch (type) {
-        case MessageType.RegisterInboxResponse:
-        case MessageType.RegisterIgMessageSyncResponse:
-        case MessageType.RegisterTranslatorData:
-          getThreads();
-          break;
-        case MessageType.InjectStyles:
-          payload.forEach((styleElementOuterHTML) => (document.head.innerHTML += styleElementOuterHTML));
-          break;
-      }
+      type === MessageType.UpdatedStyles && payload.forEach((outerHTML) => (document.head.innerHTML += outerHTML));
+      type === MessageType.UpdatedThreads && setThreads(payload?.filter(({ read_state }) => read_state));
     });
-  }, [getThreads]);
+  }, []);
 
   return (
     <TranslatorProvider>
