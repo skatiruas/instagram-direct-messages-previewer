@@ -1,7 +1,7 @@
 import { TranslatorData } from '../translator/types';
 import { AppMessage, ContentScriptMessage, IgMessageSyncOp, InterceptorMessage, MessageType, Thread } from '../types';
 
-const threadMapId = 'instagramInboxPreviewerThreadMap';
+const threadMapId = 'instagramDirectMessagesPreviewerThreadMap';
 type ThreadMap = Record<string, Thread> | undefined;
 function getThreadMap(): ThreadMap {
   const threadMapString = window.sessionStorage.getItem(threadMapId);
@@ -17,7 +17,7 @@ function sendUpdatedThreadsMessage() {
   }
 }
 
-const translatorDataId = 'instagramInboxPreviewerTranslatorData';
+const translatorDataId = 'instagramDirectMessagesPreviewerTranslatorData';
 function getTranslatorData(): TranslatorData {
   return JSON.parse(window.sessionStorage.getItem(translatorDataId) ?? '{}');
 }

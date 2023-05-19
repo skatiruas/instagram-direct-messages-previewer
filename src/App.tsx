@@ -4,7 +4,9 @@ import { AppMessage, ContentScriptMessage, MessageType, Thread, Item, UnknownIte
 import { TranslatorFunction, TranslatorProvider, useTranslatorContext } from './translator/context';
 
 function renderNotImplementedContent(...args: string[]) {
-  return <span className="instagramInboxPreviewerItem--unknown">{`Not implemented: ${args.join(' | ')}`}</span>;
+  return (
+    <span className="instagramDirectMessagesPreviewerItem--unknown">{`Not implemented: ${args.join(' | ')}`}</span>
+  );
 }
 
 function renderItemContent(item: Item, t: TranslatorFunction) {
@@ -31,7 +33,7 @@ function ItemComponent(item: Item) {
   const { t } = useTranslatorContext();
 
   return (
-    <div key={`${item.item_id}-${item.timestamp}`} className="instagramInboxPreviewerItem">
+    <div key={`${item.item_id}-${item.timestamp}`} className="instagramDirectMessagesPreviewerItem">
       {renderItemContent(item, t)}
     </div>
   );
@@ -48,8 +50,8 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
   }
 
   return (
-    <div key={thread_id} className="instagramInboxPreviewerThread">
-      <div className="instagramInboxPreviewerThread__title">{thread_title}</div>
+    <div key={thread_id} className="instagramDirectMessagesPreviewerThread">
+      <div className="instagramDirectMessagesPreviewerThread__title">{thread_title}</div>
       {filteredAndSortedItems.map((item) => (
         <ItemComponent {...item} />
       ))}
@@ -57,14 +59,18 @@ function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_
   );
 }
 
-function InstagramInboxPreviewer({ threads }: { threads: Thread[] | undefined }) {
+function InstagramDirectMessagesPreviewer({ threads }: { threads: Thread[] | undefined }) {
   const { t } = useTranslatorContext();
 
   return (
-    <div className="instagramInboxPreviewer">
-      <div className={`instagramInboxPreviewer__logo ${!threads ? 'instagramInboxPreviewer__logo--loading' : ''}`} />
+    <div className="instagramDirectMessagesPreviewer">
+      <div
+        className={`instagramDirectMessagesPreviewer__logo ${
+          !threads ? 'instagramDirectMessagesPreviewer__logo--loading' : ''
+        }`}
+      />
       {threads && (
-        <div className="instagramInboxPreviewer__content">
+        <div className="instagramDirectMessagesPreviewer__content">
           {threads.length ? threads.map((thread) => <ThreadComponent {...thread} />) : t('NO_MESSAGES')}
         </div>
       )}
@@ -85,7 +91,7 @@ function App() {
 
   return (
     <TranslatorProvider>
-      <InstagramInboxPreviewer threads={threads} />
+      <InstagramDirectMessagesPreviewer threads={threads} />
     </TranslatorProvider>
   );
 }

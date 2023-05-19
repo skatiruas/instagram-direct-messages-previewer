@@ -1,7 +1,7 @@
 import { ContentScriptMessage, MessageType } from '../types';
 
 const INBOX_VIEW_REG_EXP = /^\/direct\/inbox|new\/$/;
-const INJECTED_IFRAME_ID = 'instagramInboxPreviewerIframe';
+const INJECTED_IFRAME_ID = 'instagramDirectMessagesPreviewerIframe';
 function injectApp(injectionRetryTimeout: number) {
   if (!INBOX_VIEW_REG_EXP.test(window.location.pathname) || document.getElementById(INJECTED_IFRAME_ID)) {
     return;
