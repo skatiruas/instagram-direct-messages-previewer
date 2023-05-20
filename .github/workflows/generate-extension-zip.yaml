@@ -1,0 +1,21 @@
+name: Generate extension zip
+run-name: Generating the extension's .zip file 📦
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+jobs:
+  build_and_zip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: npm install and build
+        run: |
+          npm install
+          npm run build
+      - name: Archive extension as zip artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ github.ref_name }}
+          path: build/*
