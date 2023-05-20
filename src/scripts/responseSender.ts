@@ -1,5 +1,6 @@
 import { TranslatorData } from '../translator/types';
 import { AppMessage, ContentScriptMessage, IgMessageSyncOp, InterceptorMessage, MessageType, Thread } from '../types';
+import { getUnreadThreadItems } from '../helpers';
 
 const threadMapId = 'instagramDirectMessagesPreviewerThreadMap';
 type ThreadMap = Record<string, Thread> | undefined;
@@ -59,15 +60,17 @@ function patchThreadItem({ path, op, value }: IgMessageSyncOp): ThreadMap {
     switch (op) {
       case 'add':
         threadMap[threadId].items.push(JSON.parse(value));
-        return threadMap;
+        break;
       case 'remove':
         threadMap[threadId].items = threadMap[threadId].items.filter(({ item_id }) => item_id !== itemId);
-        return threadMap;
+        break;
       case 'replace':
         const items = threadMap[threadId].items;
         items[items.findIndex(({ item_id }) => item_id === itemId)] = JSON.parse(value);
-        return threadMap;
+        break;
     }
+    updateThreadReadState(threadMap[threadId]);
+    return threadMap;
   }
 }
 
@@ -77,11 +80,16 @@ function patchThreadLastSeen({ path, op, value }: IgMessageSyncOp): ThreadMap {
   if (threadMap && threadId && userId && threadMap[threadId]) {
     switch (op) {
       case 'replace':
-        threadMap[threadId].last_seen_at;
         threadMap[threadId].last_seen_at[userId] = JSON.parse(value);
-        return threadMap;
+        break;
     }
+    updateThreadReadState(threadMap[threadId]);
+    return threadMap;
   }
+}
+
+function updateThreadReadState(thread: Thread) {
+  thread.read_state = getUnreadThreadItems(thread.items, thread.last_seen_at, thread.viewer_id).length ? 1 : 0;
 }
 
 // Transform AppMessages into ContentScriptMessages with payload

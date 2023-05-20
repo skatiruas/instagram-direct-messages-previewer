@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './App.css';
 import { AppMessage, ContentScriptMessage, MessageType, Thread, Item, UnknownItem } from './types';
 import { TranslatorFunction, TranslatorProvider, useTranslatorContext } from './translator/context';
+import { getUnreadThreadItems } from './helpers';
 
 function renderNotImplementedContent(...args: string[]) {
   return (
@@ -42,19 +43,18 @@ function ItemComponent(item: Item) {
 }
 
 function ThreadComponent({ thread_id, thread_title, items, last_seen_at, viewer_id }: Thread) {
-  const viewerLastSeen = Number.parseInt(last_seen_at[viewer_id].timestamp);
-  const filteredAndSortedItems = items
-    .filter(({ timestamp }) => viewerLastSeen < timestamp)
-    .sort((a, b) => a.timestamp - b.timestamp);
+  const sortedUnreadItems = getUnreadThreadItems(items, last_seen_at, viewer_id).sort(
+    (a, b) => a.timestamp - b.timestamp
+  );
 
-  if (!filteredAndSortedItems.length) {
+  if (!sortedUnreadItems.length) {
     return null;
   }
 
   return (
     <div key={thread_id} className="instagramDirectMessagesPreviewerThread">
       <div className="instagramDirectMessagesPreviewerThread__title">{thread_title}</div>
-      {filteredAndSortedItems.map((item) => (
+      {sortedUnreadItems.map((item) => (
         <ItemComponent {...item} />
       ))}
     </div>
