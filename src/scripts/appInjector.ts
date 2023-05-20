@@ -26,7 +26,7 @@ function injectApp(injectionRetryTimeout = 100) {
   requestAnimationFrame(() => {
     try {
       const fullExtensionElements = document.querySelectorAll('[style="height: 100%; width: 100%;"]');
-      const messageBoard = fullExtensionElements.item(fullExtensionElements.length - 1);
+      const messageBoard = fullExtensionElements.item(2);
       if (
         injectionRetryTimeout &&
         (messageBoard.firstElementChild?.tagName !== 'svg' || !messageBoard.lastElementChild?.querySelector('button'))
