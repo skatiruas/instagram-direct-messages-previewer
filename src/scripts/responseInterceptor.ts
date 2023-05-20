@@ -50,7 +50,7 @@ const inboxApiRegExp = /^\/api\/v1\/direct_v2\/inbox\/$/;
   });
 })(MessageEvent);
 
-// Intercept translation strings on Instagram window
+// Extract translation strings on Instagram window
 document.addEventListener('DOMContentLoaded', () => {
   const polarisDirectStrings = (window as any).importNamespace?.('PolarisDirectStrings');
   polarisDirectStrings &&

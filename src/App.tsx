@@ -5,7 +5,9 @@ import { TranslatorFunction, TranslatorProvider, useTranslatorContext } from './
 
 function renderNotImplementedContent(...args: string[]) {
   return (
-    <span className="instagramDirectMessagesPreviewerItem--unknown">{`Not implemented: ${args.join(' | ')}`}</span>
+    <span className="instagramDirectMessagesPreviewerItem--unknown">{`${chrome.i18n.getMessage(
+      'notYetImplemented'
+    )}: ${args.join(' | ')}`}</span>
   );
 }
 
@@ -65,6 +67,7 @@ function InstagramDirectMessagesPreviewer({ threads }: { threads: Thread[] | und
   return (
     <div className="instagramDirectMessagesPreviewer">
       <div
+        title={chrome.i18n.getMessage('appName')}
         className={`instagramDirectMessagesPreviewer__logo ${
           !threads ? 'instagramDirectMessagesPreviewer__logo--loading' : ''
         }`}

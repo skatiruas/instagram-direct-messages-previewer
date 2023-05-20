@@ -89,9 +89,9 @@ export interface PayloadMessage<Type extends MessageType, Payload> extends Messa
 export type InterceptorMessage =
   | PayloadMessage<MessageType.InterceptedInboxResponse, InboxResponse>
   | PayloadMessage<MessageType.InterceptedIgMessageSyncResponse, IgMessageSyncResponse>
-  | PayloadMessage<MessageType.InterceptedTranslatorData, TranslatorData>;
+  | PayloadMessage<MessageType.InterceptedTranslatorData, Partial<TranslatorData>>;
 export type ContentScriptMessage =
   | PayloadMessage<MessageType.UpdatedThreads, Thread[]>
-  | PayloadMessage<MessageType.UpdatedTranslatorData, TranslatorData>
+  | PayloadMessage<MessageType.UpdatedTranslatorData, Partial<TranslatorData>>
   | PayloadMessage<MessageType.UpdatedStyles, HTMLStyleElement['outerHTML'][]>;
 export type AppMessage = Message<MessageType.GetThreads> | Message<MessageType.GetTranslatorData>;

@@ -12,12 +12,16 @@ const TranslationContext = React.createContext<{ t: TranslatorFunction }>({
 export const useTranslatorContext = () => React.useContext(TranslationContext);
 
 export const TranslatorProvider = ({ children }: { children: React.ReactNode }) => {
-  const [translatorData, setTranslatorData] = useState<TranslatorData>({} as TranslatorData);
+  const [translatorData, setTranslatorData] = useState<TranslatorData>({
+    NO_MESSAGES: chrome.i18n.getMessage('NO_MESSAGES'),
+    REPLIED_TO_YOUR_STORY: chrome.i18n.getMessage('REPLIED_TO_YOUR_STORY'),
+    reactedToYourStory: chrome.i18n.getMessage('reactedToYourStory'),
+  });
 
   useEffect(() => {
     chrome.runtime.sendMessage<AppMessage>({ type: MessageType.GetTranslatorData });
     chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
-      type === MessageType.UpdatedTranslatorData && setTranslatorData({ ...translatorData, ...payload });
+      type === MessageType.UpdatedTranslatorData && setTranslatorData((data) => ({ ...data, ...payload }));
     });
   }, []);
 

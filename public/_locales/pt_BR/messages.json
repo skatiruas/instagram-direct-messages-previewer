@@ -1,0 +1,11 @@
+{
+  "appName": {
+    "message": "Instagram Direct Messages Previewer"
+  },
+  "appDescription": {
+    "message": "Pré-visualize mensagens do Instagram sem marcá-las como lida"
+  },
+  "notYetImplemented": {
+    "message": "Ainda não implementado"
+  }
+}

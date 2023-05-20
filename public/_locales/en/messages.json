@@ -1,0 +1,24 @@
+{
+  "appName": {
+    "message": "Instagram Direct Messages Previewer"
+  },
+  "appDescription": {
+    "message": "Preview Instagram direct messages without marking them as read"
+  },
+  "notYetImplemented": {
+    "message": "Not yet implemented",
+    "description": "Message shown for item types that were not yet implemented"
+  },
+  "NO_MESSAGES": {
+    "message": "No Messages",
+    "description": "Fallback for 'NO_MESSAGES' if PolarisDirectStrings extraction fails"
+  },
+  "REPLIED_TO_YOUR_STORY": {
+    "message": "Replied to your story",
+    "description": "Fallback for 'REPLIED_TO_YOUR_STORY' if PolarisDirectStrings extraction fails"
+  },
+  "reactedToYourStory": {
+    "message": "Reacted to your story: $1",
+    "description": "Fallback for 'reactedToYourStory' if PolarisDirectStrings extraction fails"
+  }
+}
