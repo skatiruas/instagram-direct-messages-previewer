@@ -1,5 +1,13 @@
 import { TranslatorData } from '../translator/types';
-import { AppMessage, ContentScriptMessage, IgMessageSyncOp, InterceptorMessage, MessageType, Thread } from '../types';
+import {
+  AppMessage,
+  Base64Data,
+  ContentScriptMessage,
+  IgMessageSyncOp,
+  InterceptorMessage,
+  MessageType,
+  Thread,
+} from '../types';
 import { getUnreadThreadItems } from '../helpers';
 
 const threadMapId = 'instagramDirectMessagesPreviewerThreadMap';
@@ -26,6 +34,14 @@ function sendUpdatedTranslatorDataMessage() {
   chrome.runtime.sendMessage<ContentScriptMessage>({
     type: MessageType.UpdatedTranslatorData,
     payload: getTranslatorData(),
+  });
+}
+
+const base64Data: Base64Data = {};
+function sendUpdatedBase64DataMessage() {
+  chrome.runtime.sendMessage<ContentScriptMessage>({
+    type: MessageType.UpdatedBase64Data,
+    payload: base64Data,
   });
 }
 
@@ -93,13 +109,26 @@ function updateThreadReadState(thread: Thread) {
 }
 
 // Transform AppMessages into ContentScriptMessages with payload
-chrome.runtime.onMessage.addListener(({ type }: AppMessage) => {
-  switch (type) {
+chrome.runtime.onMessage.addListener(async (appMessage: AppMessage) => {
+  switch (appMessage.type) {
     case MessageType.GetThreads:
       sendUpdatedThreadsMessage();
       break;
     case MessageType.GetTranslatorData:
       sendUpdatedTranslatorDataMessage();
       break;
+    case MessageType.ConvertToBase64: {
+      if (base64Data[appMessage.payload]) {
+        sendUpdatedBase64DataMessage();
+      } else {
+        const response = await fetch(appMessage.payload);
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(await response.blob());
+        fileReader.onloadend = function () {
+          base64Data[appMessage.payload] = `${fileReader.result}`;
+          sendUpdatedBase64DataMessage();
+        };
+      }
+    }
   }
 });

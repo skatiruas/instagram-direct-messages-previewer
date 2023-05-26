@@ -32,7 +32,29 @@ export interface ReelShareItem extends BaseItem {
   };
 }
 
-export type Item = TextItem | ActionLogItem | ReelShareItem;
+interface Media {
+  code: string;
+  image_versions2: {
+    candidates: Array<{
+      url: string;
+      height: number;
+      width: number;
+    }>;
+  };
+}
+
+export interface MediaShare extends BaseItem {
+  item_type: 'media_share';
+  direct_media_share?: {
+    media_share_type: 'tag';
+    text: string;
+    media: Media;
+  };
+  media_share?: Media;
+}
+
+export type Item = TextItem | ActionLogItem | ReelShareItem | MediaShare;
+
 export interface Thread {
   thread_id: string;
   thread_title: string;
@@ -73,10 +95,14 @@ export enum MessageType {
   InterceptedTranslatorData = 'interceptedTranslatorData',
   UpdatedThreads = 'updatedThreads',
   UpdatedTranslatorData = 'updatedTranslatorData',
+  UpdatedBase64Data = 'updatedBase64Data',
   UpdatedStyles = 'updatedStyles',
   GetThreads = 'getThreads',
   GetTranslatorData = 'getTranslatorData',
+  ConvertToBase64 = 'convertToBase64',
 }
+
+export type Base64Data = Record<string, string>;
 
 export interface Message<Type extends MessageType> {
   type: Type;
@@ -93,5 +119,9 @@ export type InterceptorMessage =
 export type ContentScriptMessage =
   | PayloadMessage<MessageType.UpdatedThreads, Thread[]>
   | PayloadMessage<MessageType.UpdatedTranslatorData, Partial<TranslatorData>>
-  | PayloadMessage<MessageType.UpdatedStyles, HTMLStyleElement['outerHTML'][]>;
-export type AppMessage = Message<MessageType.GetThreads> | Message<MessageType.GetTranslatorData>;
+  | PayloadMessage<MessageType.UpdatedStyles, HTMLStyleElement['outerHTML'][]>
+  | PayloadMessage<MessageType.UpdatedBase64Data, Base64Data>;
+export type AppMessage =
+  | Message<MessageType.GetThreads>
+  | Message<MessageType.GetTranslatorData>
+  | PayloadMessage<MessageType.ConvertToBase64, string>;

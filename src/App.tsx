@@ -12,6 +12,18 @@ function renderNotImplementedContent(...args: string[]) {
   );
 }
 
+function MediaComponent({ url }: { url: string }) {
+  const [base64, setBase64] = useState<string>();
+  useEffect(() => {
+    chrome.runtime.sendMessage<AppMessage>({ type: MessageType.ConvertToBase64, payload: url });
+    chrome.runtime.onMessage.addListener(({ type, payload }: ContentScriptMessage) => {
+      type === MessageType.UpdatedBase64Data && payload[url] && setBase64(payload[url]);
+    });
+  });
+
+  return base64 ? <img src={base64} alt={url} /> : null;
+}
+
 function renderItemContent(item: Item, t: TranslatorFunction) {
   switch (item.item_type) {
     case 'text':
@@ -27,6 +39,15 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
       }
     case 'action_log':
       return item.action_log.description;
+    case 'media_share': {
+      if (item.direct_media_share) {
+        return <MediaComponent url={item.direct_media_share.media.image_versions2.candidates[0].url} />;
+      } else if (item.media_share) {
+        return <MediaComponent url={item.media_share.image_versions2.candidates[0].url} />;
+      } else {
+        return renderNotImplementedContent((item as UnknownItem).item_type, ...Object.keys(item));
+      }
+    }
     default:
       return renderNotImplementedContent((item as UnknownItem).item_type);
   }
