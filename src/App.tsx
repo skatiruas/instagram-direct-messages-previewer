@@ -12,7 +12,7 @@ function renderNotImplementedContent(...args: string[]) {
   );
 }
 
-function MediaComponent({ url }: { url: string }) {
+function MediaComponent({ url, code }: { url: string; code?: string }) {
   const [base64, setBase64] = useState<string>();
   useEffect(() => {
     chrome.runtime.sendMessage<AppMessage>({ type: MessageType.ConvertToBase64, payload: url });
@@ -21,7 +21,11 @@ function MediaComponent({ url }: { url: string }) {
     });
   });
 
-  return base64 ? <img src={base64} alt={url} /> : null;
+  return base64 ? (
+    <a target="_blank" rel="noreferrer" href={code ? `https://www.instagram.com/p/${code}` : url}>
+      <img src={base64} alt={url} />
+    </a>
+  ) : null;
 }
 
 function renderItemContent(item: Item, t: TranslatorFunction) {
@@ -39,14 +43,22 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
       }
     case 'action_log':
       return item.action_log.description;
+    case 'media':
+      return <MediaComponent url={item.media.image_versions2.candidates[0].url} />;
     case 'media_share': {
       if (item.direct_media_share) {
-        return <MediaComponent url={item.direct_media_share.media.image_versions2.candidates[0].url} />;
+        const { image_versions2, code } = item.direct_media_share.media;
+        return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
       } else if (item.media_share) {
-        return <MediaComponent url={item.media_share.image_versions2.candidates[0].url} />;
+        const { image_versions2, code } = item.media_share;
+        return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
       } else {
         return renderNotImplementedContent((item as UnknownItem).item_type, ...Object.keys(item));
       }
+    }
+    case 'clip': {
+      const { image_versions2, code } = item.clip.clip;
+      return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
     }
     default:
       return renderNotImplementedContent((item as UnknownItem).item_type);

@@ -32,8 +32,8 @@ export interface ReelShareItem extends BaseItem {
   };
 }
 
-interface Media {
-  code: string;
+interface MediaPayload {
+  code?: string;
   image_versions2: {
     candidates: Array<{
       url: string;
@@ -43,17 +43,29 @@ interface Media {
   };
 }
 
+export interface Media extends BaseItem {
+  item_type: 'media';
+  media: MediaPayload;
+}
+
 export interface MediaShare extends BaseItem {
   item_type: 'media_share';
   direct_media_share?: {
     media_share_type: 'tag';
     text: string;
-    media: Media;
+    media: MediaPayload;
   };
-  media_share?: Media;
+  media_share?: MediaPayload;
 }
 
-export type Item = TextItem | ActionLogItem | ReelShareItem | MediaShare;
+export interface Clip extends BaseItem {
+  item_type: 'clip';
+  clip: {
+    clip: MediaPayload;
+  };
+}
+
+export type Item = TextItem | ActionLogItem | ReelShareItem | Media | MediaShare | Clip;
 
 export interface Thread {
   thread_id: string;

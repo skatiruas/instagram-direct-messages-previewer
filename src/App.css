@@ -3,6 +3,7 @@
   --system-14-line-height: 18px;
   --font-weight-system-regular: 400;
   --font-weight-system-semibold: 600;
+  --direct-message-max-width: 236px;
   --ig-error-or-destructive: 237, 73, 86;
   --ig-primary-background: 255, 255, 255;
   --ig-primary-text: 0, 0, 0;
@@ -63,6 +64,7 @@
   overflow-y: scroll;
   padding: 10px 20px;
   height: 100%;
+  width: 100%;
   font-size: var(--system-14-font-size);
   font-weight: var(--font-weight-system-regular);
   line-height: var(--system-14-line-height);
@@ -78,7 +80,9 @@
 
 .instagramDirectMessagesPreviewerThread {
   text-align: left;
-  width: 100vw;
+  width: 100%;
+  max-width: var(--direct-message-max-width);
+  margin: 0 auto var(--system-14-line-height) auto;
   padding: 0;
 }
 
@@ -88,7 +92,7 @@
 }
 
 .instagramDirectMessagesPreviewerItem {
-  width: 100vw;
+  width: fit-content;
   border: 1px solid rgb(var(--ig-highlight-background));
   border-radius: 22px;
   box-sizing: border-box;
