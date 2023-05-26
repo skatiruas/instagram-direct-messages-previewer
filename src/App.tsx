@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import './App.css';
 import { AppMessage, ContentScriptMessage, MessageType, Thread, Item, UnknownItem } from './types';
 import { TranslatorFunction, TranslatorProvider, useTranslatorContext } from './translator/context';
@@ -12,7 +12,7 @@ function renderNotImplementedContent(...args: string[]) {
   );
 }
 
-function MediaComponent({ url, code }: { url: string; code?: string }) {
+function Base64Image({ url, className }: { url: string; className?: string }) {
   const [base64, setBase64] = useState<string>();
   useEffect(() => {
     chrome.runtime.sendMessage<AppMessage>({ type: MessageType.ConvertToBase64, payload: url });
@@ -21,11 +21,30 @@ function MediaComponent({ url, code }: { url: string; code?: string }) {
     });
   });
 
-  return base64 ? (
-    <a target="_blank" rel="noreferrer" href={code ? `https://www.instagram.com/p/${code}` : url}>
-      <img src={base64} alt={url} />
-    </a>
-  ) : null;
+  return base64 ? <img src={base64} alt={url} className={className} /> : null;
+}
+
+interface MediaComponentProps {
+  url: string;
+  targetUrl?: string;
+  code?: string;
+  reactionUrl?: string;
+}
+function MediaComponent({ url, code, targetUrl, reactionUrl }: MediaComponentProps) {
+  const urlBase64 = useMemo(() => <Base64Image url={url} />, [url]);
+  const reactionBase64 = useMemo(
+    () => reactionUrl && <Base64Image url={reactionUrl} className="instagramDirectMessagesPreviewerItem--reaction" />,
+    [reactionUrl]
+  );
+
+  return (
+    urlBase64 && (
+      <a target="_blank" rel="noreferrer" href={targetUrl || (code ? `https://www.instagram.com/p/${code}` : url)}>
+        {urlBase64}
+        {reactionBase64}
+      </a>
+    )
+  );
 }
 
 function renderItemContent(item: Item, t: TranslatorFunction) {
@@ -38,9 +57,30 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
           return t('reactedToYourStory', item.reel_share.text);
         case 'reply':
           return `${t('REPLIED_TO_YOUR_STORY')}: ${item.reel_share.text}`;
+        case 'mention': {
+          if (item.reel_share.media.image_versions2) {
+            const { image_versions2, code } = item.reel_share.media;
+            return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
+          } else {
+            return renderNotImplementedContent(
+              item.item_type,
+              item.reel_share.type,
+              Object.keys(item.reel_share.media).toString()
+            );
+          }
+        }
         default:
           return renderNotImplementedContent(item.item_type, item.reel_share.type);
       }
+    case 'xma_reel_share': {
+      return (
+        <MediaComponent
+          url={item.xma_reel_share[0].preview_url}
+          targetUrl={item.xma_reel_share[0].target_url}
+          reactionUrl={item.reaction_image_url_info?.url}
+        />
+      );
+    }
     case 'action_log':
       return item.action_log.description;
     case 'media':

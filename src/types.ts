@@ -28,8 +28,22 @@ export interface ReelShareItem extends BaseItem {
   item_type: 'reel_share';
   reel_share: {
     text: string;
-    type: 'reply' | 'reaction';
+    type: 'reply' | 'reaction' | 'mention';
+    media: Partial<MediaPayload>;
   };
+}
+
+export interface XmaReelShareItem extends BaseItem {
+  item_type: 'xma_reel_share';
+  auxiliary_text: string;
+  message_item_type: string;
+  reaction_image_url_info?: {
+    url: string;
+  };
+  xma_reel_share: Array<{
+    preview_url: string;
+    target_url: string;
+  }>;
 }
 
 interface MediaPayload {
@@ -65,7 +79,7 @@ export interface Clip extends BaseItem {
   };
 }
 
-export type Item = TextItem | ActionLogItem | ReelShareItem | Media | MediaShare | Clip;
+export type Item = TextItem | ActionLogItem | ReelShareItem | XmaReelShareItem | Media | MediaShare | Clip;
 
 export interface Thread {
   thread_id: string;

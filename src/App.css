@@ -100,8 +100,16 @@
   overflow: hidden;
   padding: 16px;
   margin-bottom: 8px;
+  position: relative;
 }
 
 .instagramDirectMessagesPreviewerItem--unknown {
   color: rgb(var(--ig-error-or-destructive));
+}
+
+img.instagramDirectMessagesPreviewerItem--reaction {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 50%;
 }
