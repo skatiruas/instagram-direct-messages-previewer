@@ -24,6 +24,14 @@ function Base64Image({ url, className }: { url: string; className?: string }) {
   return base64 ? <img src={base64} alt={url} className={className} /> : null;
 }
 
+function LinkComponent({ href, children }: { href?: string; children?: React.ReactNode }) {
+  return (
+    <a target="_blank" rel="noreferrer" href={href}>
+      {children}
+    </a>
+  );
+}
+
 interface MediaComponentProps {
   url: string;
   targetUrl?: string;
@@ -39,10 +47,10 @@ function MediaComponent({ url, code, targetUrl, reactionUrl }: MediaComponentPro
 
   return (
     urlBase64 && (
-      <a target="_blank" rel="noreferrer" href={targetUrl || (code ? `https://www.instagram.com/p/${code}` : url)}>
+      <LinkComponent href={targetUrl || (code ? `https://www.instagram.com/p/${code}` : url)}>
         {urlBase64}
         {reactionBase64}
-      </a>
+      </LinkComponent>
     )
   );
 }
@@ -100,6 +108,13 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
       const { image_versions2, code } = item.clip.clip;
       return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
     }
+    case 'link':
+      return (
+        <LinkComponent href={item.link.link_context.link_url}>
+          {item.link.link_context.link_image_url && <Base64Image url={item.link.link_context.link_image_url} />}
+          {item.link.text}
+        </LinkComponent>
+      );
     default:
       return renderNotImplementedContent((item as UnknownItem).item_type);
   }

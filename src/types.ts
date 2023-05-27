@@ -29,7 +29,7 @@ export interface ReelShareItem extends BaseItem {
   reel_share: {
     text: string;
     type: 'reply' | 'reaction' | 'mention';
-    media: Partial<MediaPayload>;
+    media: Partial<Media>;
   };
 }
 
@@ -45,8 +45,7 @@ export interface XmaReelShareItem extends BaseItem {
     target_url: string;
   }>;
 }
-
-interface MediaPayload {
+interface Media {
   code?: string;
   image_versions2: {
     candidates: Array<{
@@ -57,29 +56,48 @@ interface MediaPayload {
   };
 }
 
-export interface Media extends BaseItem {
+export interface MediaItem extends BaseItem {
   item_type: 'media';
-  media: MediaPayload;
+  media: Media;
 }
 
-export interface MediaShare extends BaseItem {
+export interface MediaShareItem extends BaseItem {
   item_type: 'media_share';
   direct_media_share?: {
     media_share_type: 'tag';
     text: string;
-    media: MediaPayload;
+    media: Media;
   };
-  media_share?: MediaPayload;
+  media_share?: Media;
 }
 
-export interface Clip extends BaseItem {
+export interface ClipItem extends BaseItem {
   item_type: 'clip';
   clip: {
-    clip: MediaPayload;
+    clip: Media;
   };
 }
 
-export type Item = TextItem | ActionLogItem | ReelShareItem | XmaReelShareItem | Media | MediaShare | Clip;
+export interface LinkItem extends BaseItem {
+  item_type: 'link';
+  link: {
+    link_context: {
+      link_image_url: string;
+      link_url: string;
+    };
+    text: string;
+  };
+}
+
+export type Item =
+  | TextItem
+  | ActionLogItem
+  | ReelShareItem
+  | XmaReelShareItem
+  | MediaItem
+  | MediaShareItem
+  | ClipItem
+  | LinkItem;
 
 export interface Thread {
   thread_id: string;

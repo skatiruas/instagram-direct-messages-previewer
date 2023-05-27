@@ -8,6 +8,7 @@
   --ig-primary-background: 255, 255, 255;
   --ig-primary-text: 0, 0, 0;
   --ig-highlight-background: 239, 239, 239;
+  --ig-link: 0, 55, 107;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,6 +16,7 @@
     --ig-primary-background: 0, 0, 0;
     --ig-primary-text: 245, 245, 245;
     --ig-highlight-background: 38, 38, 38;
+    --ig-link: 224, 241, 255;
   }
 }
 
@@ -65,6 +67,7 @@
   padding: 10px 20px;
   height: 100%;
   width: 100%;
+  text-align: center;
   font-size: var(--system-14-font-size);
   font-weight: var(--font-weight-system-regular);
   line-height: var(--system-14-line-height);
@@ -76,6 +79,11 @@
   max-height: 100%;
   height: auto;
   width: auto;
+}
+
+.instagramDirectMessagesPreviewer__content a {
+  color: rgb(var(--ig-link));
+  text-decoration: none;
 }
 
 .instagramDirectMessagesPreviewerThread {
@@ -93,6 +101,7 @@
 
 .instagramDirectMessagesPreviewerItem {
   width: fit-content;
+  max-width: var(--direct-message-max-width);
   border: 1px solid rgb(var(--ig-highlight-background));
   border-radius: 22px;
   box-sizing: border-box;
