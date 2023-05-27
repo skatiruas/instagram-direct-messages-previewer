@@ -89,6 +89,16 @@ export interface LinkItem extends BaseItem {
   };
 }
 
+export interface ProfileItem extends BaseItem {
+  item_type: 'profile';
+  preview_medias: Media[];
+  profile: {
+    full_name: string;
+    profile_pic_url: string;
+    username: string;
+  };
+}
+
 export type Item =
   | TextItem
   | ActionLogItem
@@ -97,7 +107,8 @@ export type Item =
   | MediaItem
   | MediaShareItem
   | ClipItem
-  | LinkItem;
+  | LinkItem
+  | ProfileItem;
 
 export interface Thread {
   thread_id: string;

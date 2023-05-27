@@ -24,9 +24,14 @@ function Base64Image({ url, className }: { url: string; className?: string }) {
   return base64 ? <img src={base64} alt={url} className={className} /> : null;
 }
 
-function LinkComponent({ href, children }: { href?: string; children?: React.ReactNode }) {
+interface LinkComponentProps {
+  href?: string;
+  children?: React.ReactNode;
+  className?: string;
+}
+function LinkComponent({ href, children, className }: LinkComponentProps) {
   return (
-    <a target="_blank" rel="noreferrer" href={href}>
+    <a target="_blank" rel="noreferrer" href={href} className={className}>
       {children}
     </a>
   );
@@ -101,7 +106,7 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
         const { image_versions2, code } = item.media_share;
         return <MediaComponent url={image_versions2.candidates[0].url} code={code} />;
       } else {
-        return renderNotImplementedContent((item as UnknownItem).item_type, ...Object.keys(item));
+        return renderNotImplementedContent((item as UnknownItem).item_type, Object.keys(item).toString());
       }
     }
     case 'clip': {
@@ -113,6 +118,19 @@ function renderItemContent(item: Item, t: TranslatorFunction) {
         <LinkComponent href={item.link.link_context.link_url}>
           {item.link.link_context.link_image_url && <Base64Image url={item.link.link_context.link_image_url} />}
           {item.link.text}
+        </LinkComponent>
+      );
+    case 'profile':
+      return (
+        <LinkComponent
+          href={`https://www.instagram.com/${item.profile.username}`}
+          className="instagramDirectMessagesPreviewerProfileItem"
+        >
+          <Base64Image url={item.profile.profile_pic_url} />
+          <div>
+            <h3>{item.profile.username}</h3>
+            <h5>{item.profile.full_name}</h5>
+          </div>
         </LinkComponent>
       );
     default:

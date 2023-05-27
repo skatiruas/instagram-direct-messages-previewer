@@ -7,6 +7,7 @@
   --ig-error-or-destructive: 237, 73, 86;
   --ig-primary-background: 255, 255, 255;
   --ig-primary-text: 0, 0, 0;
+  --ig-secondary-text: 115, 115, 115;
   --ig-highlight-background: 239, 239, 239;
   --ig-link: 0, 55, 107;
 }
@@ -15,6 +16,7 @@
   :root {
     --ig-primary-background: 0, 0, 0;
     --ig-primary-text: 245, 245, 245;
+    --ig-secondary-text: 168, 168, 168;
     --ig-highlight-background: 38, 38, 38;
     --ig-link: 224, 241, 255;
   }
@@ -121,4 +123,24 @@ img.instagramDirectMessagesPreviewerItem--reaction {
   bottom: 0;
   right: 0;
   width: 50%;
+}
+
+.instagramDirectMessagesPreviewerProfileItem {
+  display: flex;
+}
+
+.instagramDirectMessagesPreviewerProfileItem img {
+  border: 0;
+  border-radius: 50%;
+  height: 34px;
+}
+
+.instagramDirectMessagesPreviewerProfileItem h3 {
+  color: rgb(var(--ig-primary-text));
+  margin: 0 0 0 var(--system-14-font-size);
+}
+
+.instagramDirectMessagesPreviewerProfileItem h5 {
+  color: rgb(var(--ig-secondary-text));
+  margin: 0 0 0 var(--system-14-font-size);
 }
