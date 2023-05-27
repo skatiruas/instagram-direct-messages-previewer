@@ -5,13 +5,27 @@ const inboxApiRegExp = /^\/api\/v1\/direct_v2\/inbox\/$/;
 
 // Intercept wanted responses in the Main World and send them as postMessage to Isolated World
 (function ({ prototype }) {
-  const { send } = prototype;
+  const { open, send } = prototype;
+
+  prototype.open = function (
+    method: string,
+    originalUrl: string | URL,
+    async?: boolean,
+    username?: string | null | undefined,
+    password?: string | null | undefined
+  ) {
+    const url = new URL(originalUrl, window.location.origin);
+    if (inboxApiRegExp.test(url.pathname) && url.searchParams.get('thread_message_limit')) {
+      url.searchParams.set('thread_message_limit', '5');
+    }
+    open.apply(this, [method, url, async ?? false, username, password]);
+  };
 
   prototype.send = function (body) {
     this.addEventListener('load', function () {
       let interceptorMessage: InterceptorMessage | undefined;
 
-      const url = new URL(this.responseURL);
+      const url = new URL(this.responseURL, window.location.origin);
       if (inboxApiRegExp.test(url.pathname)) {
         interceptorMessage = {
           type: MessageType.InterceptedInboxResponse,
